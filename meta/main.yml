@@ -1,0 +1,18 @@
+---
+allow_duplicates: no
+
+dependencies:
+  - { role: andyceo.preconf }
+
+galaxy_info:
+  author: andyceo
+  description: Install php, its modules and provide usefull settings for it
+  license: "license (BSD, MIT)"
+  min_ansible_version: 1.5
+  platforms:
+  - name: Ubuntu
+    versions:
+    - trusty
+  categories:
+    - system
+    - development

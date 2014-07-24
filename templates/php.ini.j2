@@ -1,0 +1,5 @@
+{% set settings = php.settings.common %}
+{% set _dummy = settings.update(php.settings[item.key]) %}
+{% for key, value in settings.iteritems() | sort %}
+{{ key }} = {{ value }}
+{% endfor %}

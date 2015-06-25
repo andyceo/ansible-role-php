@@ -20,11 +20,12 @@
 - name: Is mysql installed?
   command: which mysql
   register: is_mysql_installed_path
+  ignore_errors: yes
 
 - name: Install php5-mysql extension if mysql installed
   apt: pkg=php5-mysql
   sudo: yes
-  when: is_mysql_installed_path | changed
+  when: is_mysql_installed_path.stdout
   notify: restart-php-webserver
 
 - name: Enable php5-mysql extension if mysql installed

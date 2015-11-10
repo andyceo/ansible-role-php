@@ -2,8 +2,9 @@
   apt: pkg={{ item }}
   sudo: yes
   with_items:
-    - php5
     - php5-common
+    # We can't use php5 pakage here, because it depends on libapache2-php5 or
+    # php5-fpm or php5-cgi
     - php5-cli
 
 - name: Install PHP extensions (modules)

@@ -1,9 +1,6 @@
 ---
 allow_duplicates: no
 
-dependencies:
-  - { role: andyceo.preconf }
-
 galaxy_info:
   author: andyceo
   description: Install php, its modules and provide usefull settings for it

@@ -1,4 +1,8 @@
 ---
-- name: restart-php-webserver
-  service: "name={{ php.webserver }} state=restarted"
-  when: php.webserver
+
+- name: restart-php-services
+  service: "name={{ php.data.parts[item].service }} state=restarted"
+  with_items: php.install.parts
+  when: php.data.parts[item].service is defined
+  ignore_errors: yes
+  # We need ignore_errors: yes because php5-fpm did not start immediately after install

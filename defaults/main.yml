@@ -1,11 +1,15 @@
 ---
+
 php:
-  modules:
-    curl: php5-curl
-    gd: php5-gd
-    mcrypt: php5-mcrypt
-    intl: php5-intl
-    json: php5-json
+  install:
+    parts:
+      - cli
+    modules:
+      - json
+      - curl
+      - gd
+      - mcrypt
+      - intl
   settings:
     common:
       realpath_cache_size: 8192k
@@ -50,10 +54,26 @@ php:
       session.gc_probability: 1
     fpm:
       max_execution_time: 85
-  settings_pathes:
-    cli: /etc/php5/cli/conf.d/php.ini
-    apache2: /etc/php5/apache2/conf.d/php.ini
-    fpm: /etc/php5/fpm/conf.d/php.ini
-  # Don't forget to set this parameter if you have webserver to reload!
-  webserver:
-  php-fpm: false
+  data:
+    parts:
+      cli:
+        package: php5-cli
+        settings_path: /etc/php5/cli/conf.d/php.ini
+      apache2:
+        package: libapache2-mod-php5
+        settings_path: /etc/php5/apache2/conf.d/php.ini
+        service: apache2
+      cgi:
+        package: php5-cgi
+        settings_path: /etc/php5/cgi/conf.d/php.ini
+      fpm:
+        package: php5-fpm
+        settings_path: /etc/php5/fpm/conf.d/php.ini
+        service: php5-fpm
+    modules:
+      curl: php5-curl
+      gd: php5-gd
+      mcrypt: php5-mcrypt
+      intl: php5-intl
+      json: php5-json
+      mysql: php5-mysql

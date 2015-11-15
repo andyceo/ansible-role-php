@@ -1,42 +1,33 @@
-- name: Install base PHP packages
-  apt: pkg={{ item }}
-  sudo: yes
-  with_items:
-    - php5-common
-    # We can't use php5 pakage here, because it depends on libapache2-php5 or
-    # php5-fpm or php5-cgi
-    - php5-cli
+---
 
-- name: Install PHP extensions (modules)
-  apt: pkg={{ item.value }}
+- name: Install base PHP package
+  apt: pkg=php5-common
   sudo: yes
-  with_dict: php.modules
-  notify: restart-php-webserver
 
-- name: Enable extensions (modules) for all SAPI's
-  command: php5enmod -s ALL {{ item.key }}
+- name: Install PHP parts
+  apt: pkg={{ php.data.parts[item.1].package }}
   sudo: yes
-  with_dict: php.modules
-
-- name: Is mysql installed?
-  command: which mysql
-  register: is_mysql_installed_path
-  ignore_errors: yes
-
-- name: Install php5-mysql extension if mysql installed
-  apt: pkg=php5-mysql
-  sudo: yes
-  when: is_mysql_installed_path.stdout
-  notify: restart-php-webserver
-
-- name: Enable php5-mysql extension if mysql installed
-  command: php5enmod -s ALL mysql
-  sudo: yes
+  with_indexed_items: php.install.parts
+# with_indexed_items - is workaround about bug with with_items and apt.
+# @see https://github.com/ansible/ansible-modules-core/issues/1178
 
 - name: Copy PHP settings files
   template:
     src=php.ini.j2
-    dest={{ item.value }}
+    dest={{ php.data.parts[item].settings_path }}
   sudo: yes
-  with_dict: php.settings_pathes
-  notify: restart-php-webserver
+  with_items: php.install.parts
+  notify: restart-php-services
+
+- name: Install PHP extensions (modules)
+  apt: pkg={{ php.data.modules[item.1] }}
+  sudo: yes
+  with_indexed_items: php.install.modules
+  notify: restart-php-services
+
+- name: Enable extensions (modules) for all SAPI's
+  command: php5enmod -s ALL {{ item }}
+  sudo: yes
+  with_items: php.install.modules
+
+- meta: flush_handlers

@@ -54,6 +54,7 @@ php:
       session.gc_probability: 1
     fpm:
       max_execution_time: 85
+      cgi.fix_pathinfo: 0
   data:
     parts:
       cli:

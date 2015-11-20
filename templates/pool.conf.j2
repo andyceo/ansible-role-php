@@ -1,4 +1,4 @@
-[item.key]
+[{{ item.key }}]
 {% for key, value in php.fpm_pools[item.key].iteritems() %}
 {{ key }} = {{ value }}
 {% endfor %}

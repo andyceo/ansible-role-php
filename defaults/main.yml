@@ -55,6 +55,13 @@ php:
     fpm:
       max_execution_time: 85
       cgi.fix_pathinfo: 0
+  fpm_pools:
+    www:
+      security.limit_extensions: .php .php3 .php4 .php5
+      listen: /var/run/php5-fpm.sock
+      listen.owner: www-data
+      listen.group: www-data
+      listen.mode: "0660"
   data:
     parts:
       cli:
@@ -70,6 +77,7 @@ php:
       fpm:
         package: php5-fpm
         settings_path: /etc/php5/fpm/conf.d/php.ini
+        pools_settings_path: /etc/php5/fpm/pool.d
         service: php5-fpm
     modules:
       curl: php5-curl

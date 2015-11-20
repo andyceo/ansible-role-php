@@ -11,12 +11,21 @@
 # with_indexed_items - is workaround about bug with with_items and apt.
 # @see https://github.com/ansible/ansible-modules-core/issues/1178
 
-- name: Copy PHP settings files
+- name: Generate PHP parts settings files
   template:
     src=php.ini.j2
     dest={{ php.data.parts[item].settings_path }}
   sudo: yes
   with_items: php.install.parts
+  notify: restart-php-services
+
+- name: Generate php-fpm pools settings files
+  template:
+    src=pool.conf.j2
+    dest={{ php.data.parts.fpm.pools_settings_path }}/{{ item.key }}.conf
+  sudo: yes
+  with_dict: php.fpm_pools
+  when: '"fpm" in php.install.parts'
   notify: restart-php-services
 
 - name: Install PHP extensions (modules)

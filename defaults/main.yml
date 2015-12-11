@@ -61,7 +61,19 @@ php:
       listen: /var/run/php5-fpm.sock
       listen.owner: www-data
       listen.group: www-data
-      listen.mode: "0660"
+      listen.mode: '0660'
+      catch_workers_output: 1
+      user: www-data
+      group: www-data
+      listen.backlog: 32000
+      pm: dynamic
+      pm.max_children: 9
+      pm.max_spare_servers: 4
+      pm.min_spare_servers: 2
+      pm.start_servers: 2
+      request_terminate_timeout: 0
+      rlimit_core: unlimited
+      rlimit_files: 308506
   data:
     parts:
       cli:

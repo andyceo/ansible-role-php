@@ -35,8 +35,7 @@
   notify: restart-php-services
 
 - name: Enable extensions (modules) for all SAPI's
-  command: php5enmod -s ALL {{ item }}
+  command: php5enmod -s ALL {{ php.install.modules|join(' ') }}
   sudo: yes
-  with_items: php.install.modules
 
 - meta: flush_handlers

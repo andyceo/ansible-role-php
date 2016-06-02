@@ -2,11 +2,9 @@
 
 - name: Install base PHP package
   apt: pkg=php5-common
-  sudo: yes
 
 - name: Install PHP parts
   apt: pkg={{ php.data.parts[item.1].package }}
-  sudo: yes
   with_indexed_items: php.install.parts
 # with_indexed_items - is workaround about bug with with_items and apt.
 # @see https://github.com/ansible/ansible-modules-core/issues/1178
@@ -15,7 +13,6 @@
   template:
     src=php.ini.j2
     dest={{ php.data.parts[item].settings_path }}
-  sudo: yes
   with_items: php.install.parts
   notify: restart-php-services
 
@@ -23,19 +20,16 @@
   template:
     src=pool.conf.j2
     dest={{ php.data.parts.fpm.pools_settings_path }}/{{ item.key }}.conf
-  sudo: yes
   with_dict: php.fpm_pools
   when: '"fpm" in php.install.parts'
   notify: restart-php-services
 
 - name: Install PHP extensions (modules)
   apt: pkg={{ php.data.modules[item.1] }}
-  sudo: yes
   with_indexed_items: php.install.modules
   notify: restart-php-services
 
 - name: Enable extensions (modules) for all SAPI's
   command: php5enmod -s ALL {{ php.install.modules|join(' ') }}
-  sudo: yes
 
 - meta: flush_handlers
